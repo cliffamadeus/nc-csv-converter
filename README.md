@@ -26,7 +26,7 @@ Move your **.nc file** to the `data/` folder (or any directory you prefer).
 ### 2️⃣ Update the File Path in the Script
 Edit `convert_nc_to_csv.py` and update the file path:
 ```python
-nc_file = "D:/00/panpan/data_stream-oper_stepType-accum.nc"  # Update this path
+nc_file = "D:/data_stream-oper_stepType-accum.nc"  # Update this path
 ```
 
 ### 3️⃣ Run the Script
