@@ -2,9 +2,9 @@ import xarray as xr
 import pandas as pd
 import time
 
-# Load NetCDF file
-nc_file = "C:/Users/USER/Documents/00/nc-csv-converter/data/2014-2018.nc"  # Replace with actual path
-ds = xr.open_dataset(nc_file, engine="netcdf4")
+# Load GRIB file
+grib_file = "C:/Users/USER/Documents/00/nc-csv-converter/data/1994-1998.grib"  # Replace with actual path
+ds = xr.open_dataset(grib_file, engine="cfgrib")
 
 # Process data in smaller chunks
 time_chunks = ds.valid_time.values[::1000]  # Adjust chunk size as needed
@@ -16,7 +16,7 @@ for i, t in enumerate(time_chunks):
     chunk = ds.sel(valid_time=slice(t, time_chunks[min(i+1, len(time_chunks)-1)]))
     df = chunk.to_dataframe().reset_index()
     
-    csv_file = f"C:/Users/USER/Documents/00/nc-csv-converter/output/2014-2018/2014_2018_output_chunk_{i}.csv"  # Replace with actual path
+    csv_file = f"C:/Users/USER/Documents/00/nc-csv-converter/output/1994-1998/1994_1998_output_chunk_{i}.csv"  # Replace with actual path
     df.to_csv(csv_file, index=False)
     
     chunk_end_time = time.time()
