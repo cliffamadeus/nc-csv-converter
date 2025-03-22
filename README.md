@@ -82,6 +82,4 @@ ddf.to_csv("output.csv", index=False, single_file=True)
 - Works best with **Python 3.8+**
 - Designed for large NetCDF datasets
 - Supports **memory-efficient chunk processing**
-- Added branch for multitasking
-
 ---
