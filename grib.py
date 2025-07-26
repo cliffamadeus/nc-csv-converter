@@ -3,25 +3,21 @@ import pandas as pd
 import time
 
 # Load GRIB file
-grib_file = "C:/Users/USER/Documents/00/nc-csv-converter/data/1994-1998.grib"  # Replace with actual path
-ds = xr.open_dataset(grib_file, engine="cfgrib")
+grib_file = "C:/Users/maxid/Downloads/00/nc-csv-converter/data/2001-2011.grib"
 
-# Process data in smaller chunks
-time_chunks = ds.valid_time.values[::1000]  # Adjust chunk size as needed
+# Open dataset with cfgrib
+ds = xr.open_dataset(grib_file, engine="cfgrib", backend_kwargs={'indexpath': ''}, decode_timedelta=True)
 
-total_start_time = time.time()
+# Identify the correct time coordinate
+time_var = 'valid_time' if 'valid_time' in ds.coords else list(ds.coords.keys())[0]
+ds[time_var] = pd.to_datetime(ds[time_var])  # Ensure datetime format
 
-for i, t in enumerate(time_chunks):
-    chunk_start_time = time.time()
-    chunk = ds.sel(valid_time=slice(t, time_chunks[min(i+1, len(time_chunks)-1)]))
-    df = chunk.to_dataframe().reset_index()
-    
-    csv_file = f"C:/Users/USER/Documents/00/nc-csv-converter/output/1994-1998/1994_1998_output_chunk_{i}.csv"  # Replace with actual path
-    df.to_csv(csv_file, index=False)
-    
-    chunk_end_time = time.time()
-    print(f"Saved chunk {i} -> {csv_file} (Time elapsed: {chunk_end_time - chunk_start_time:.2f} seconds)")
+# Flatten the dataset before converting to DataFrame
+df = ds.stack(z=("latitude", "longitude")).to_dataframe().reset_index()  # Flatten spatial dimensions
 
-total_end_time = time.time()
-print(f"Total conversion time: {((total_end_time - total_start_time)/60):.2f} minutes")
+# Save to CSV
+csv_file = "C:/Users/maxid/Downloads/00/nc-csv-converter/output/2001_2011_output.csv"
+df.to_csv(csv_file, index=False)
+
+print(f"Conversion completed. CSV saved at: {csv_file}")
 print("Mana ug convert, humot2 na ang toga")
